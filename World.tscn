@@ -1,7 +1,8 @@
-[gd_scene load_steps=9 format=4 uid="uid://54hdvbra5124"]
+[gd_scene load_steps=10 format=4 uid="uid://54hdvbra5124"]
 
 [ext_resource type="PackedScene" uid="uid://difxi8vul2kpm" path="res://Player/Player.tscn" id="1_0pqvg"]
 [ext_resource type="Script" path="res://bg.gd" id="1_8vjox"]
+[ext_resource type="Script" path="res://world.gd" id="1_n35hr"]
 [ext_resource type="Texture2D" uid="uid://dklophagjyjep" path="res://sunny-land-phaser-project/sunny-land/assets/environment/tileset.png" id="1_qoxae"]
 [ext_resource type="Texture2D" uid="uid://cqtr3irlk3ant" path="res://sunny-land-phaser-project/sunny-land/assets/environment/back.png" id="2_tegf0"]
 [ext_resource type="PackedScene" uid="uid://ckhkm5tbavvbm" path="res://frog.tscn" id="5_alnxu"]
@@ -169,6 +170,8 @@ size = Vector2(3908, 306)
 
 [node name="World" type="Node2D"]
 position = Vector2(78, 595)
+script = ExtResource("1_n35hr")
+frog_scene = ExtResource("5_alnxu")
 
 [node name="TileMapLayer" type="TileMapLayer" parent="."]
 tile_set = SubResource("TileSet_ak18i")
@@ -229,5 +232,7 @@ offset_bottom = 44.0
 
 [node name="Mobs" type="Node2D" parent="."]
 
-[node name="Frog" parent="Mobs" instance=ExtResource("5_alnxu")]
-position = Vector2(298, -410)
+[node name="Timer" type="Timer" parent="."]
+autostart = true
+
+[connection signal="timeout" from="Timer" to="." method="spawn_frog"]

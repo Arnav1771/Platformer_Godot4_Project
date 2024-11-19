@@ -78,7 +78,7 @@ animations = [{
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_p1iyw"]
 
-[node name="Frog" type="CharacterBody2D"]
+[node name="Frog" type="CharacterBody2D" groups=["frogs"]]
 script = ExtResource("1_wolxl")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -91,7 +91,7 @@ shape = SubResource("RectangleShape2D_cv2x8")
 position = Vector2(1, -11)
 scale = Vector2(1.04286, 1.01569)
 sprite_frames = SubResource("SpriteFrames_wyqwt")
-animation = &"Death"
+animation = &"jump"
 
 [node name="Player Detection" type="Area2D" parent="."]
 scale = Vector2(0.268441, 1.23319)
