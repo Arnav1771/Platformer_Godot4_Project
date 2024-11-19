@@ -29,6 +29,11 @@ func _physics_process(delta):
 		anim.play("idle")
 		velocity.x = move_toward(velocity.x,0, SPEED)
 	move_and_slide()
-		
+	for i in get_slide_collision_count():
+		var collision = get_slide_collision(i)
+		print(collision)
+		if (collision.get_collider().name == "Frog"):
+			print("Frog player collision")
+
 		
 	

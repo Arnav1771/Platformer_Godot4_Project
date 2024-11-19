@@ -4,6 +4,8 @@ var SPEED = 50
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 var player
 var chase = true
+var alive = true
+var death_time = 0
 
 func _ready():
 	get_node("AnimatedSprite2D").play("idle")
@@ -12,6 +14,13 @@ func _ready():
 
 func _physics_process(delta):
 	# Gravity for Frog
+	if not alive:
+		if (death_time > 35):
+			self.queue_free()
+		elif (death_time == 0):
+			get_node("AnimatedSprite2D").play("Death")
+		death_time += 1
+		return
 	velocity.y += gravity * delta
 	
 	if chase and player:
@@ -36,13 +45,9 @@ func _physics_process(delta):
 		velocity.x = 0
 	
 	move_and_slide()
-	for i in get_slide_collision_count():
-		var collision = get_slide_collision(i)
-		print("collsion with: ",collision.get_collider().name)
 		
 
 func _on_player_detection_body_entered(body):
-	print(body.name)
 	if body.name == "Player":
 		chase = true
 
@@ -54,17 +59,7 @@ func _on_player_death_body_entered(body):
 	#breakpoint
 	if body.name == "Player":
 		self.queue_free()
-
-
-func _on_player_detection_body_shape_entered(body_rid: RID, body: Node2D, body_shape_index: int, local_shape_index: int) -> void:
-	print(body.name)
-
-
-func _on_player_detection_area_shape_entered(area_rid: RID, area: Area2D, area_shape_index: int, local_shape_index: int) -> void:
-	print("area Shape:",area.name)
-	
-	
-
-
-func _on_player_detection_area_entered(area: Area2D) -> void:
-	print("Area enter:", area.name)
+		
+func on_death():
+	get_node("AnimatedSprite2D").play("Death")
+	alive = false

@@ -43,7 +43,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_oskke")
 }],
-"loop": true,
+"loop": false,
 "name": &"Death",
 "speed": 5.0
 }, {
@@ -91,8 +91,7 @@ shape = SubResource("RectangleShape2D_cv2x8")
 position = Vector2(1, -11)
 scale = Vector2(1.04286, 1.01569)
 sprite_frames = SubResource("SpriteFrames_wyqwt")
-animation = &"jump"
-frame_progress = 0.881861
+animation = &"Death"
 
 [node name="Player Detection" type="Area2D" parent="."]
 scale = Vector2(0.268441, 1.23319)
@@ -101,9 +100,5 @@ scale = Vector2(0.268441, 1.23319)
 scale = Vector2(25.1942, 5.74234)
 shape = SubResource("CircleShape2D_p1iyw")
 
-[connection signal="area_entered" from="Player Detection" to="." method="_on_player_detection_area_entered"]
-[connection signal="area_shape_entered" from="Player Detection" to="." method="_on_player_detection_area_shape_entered"]
-[connection signal="area_shape_exited" from="Player Detection" to="." method="_on_player_detection_area_shape_exited"]
 [connection signal="body_entered" from="Player Detection" to="." method="_on_player_detection_body_entered"]
 [connection signal="body_exited" from="Player Detection" to="." method="_on_player_detection_body_exited"]
-[connection signal="body_shape_entered" from="Player Detection" to="." method="_on_player_detection_body_shape_entered"]
