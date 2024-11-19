@@ -32,7 +32,7 @@ var momentum = 0.0
 var gravity = ProjectSettings.get_setting(\"physics/2d/default_gravity\")
 var is_jumping = false  # Track if the character is in the air
 
-@onready var anim = get_node(\"PlayerCollider/AnimatedSprite2D\")
+@onready var anim = get_node(\"AnimatedSprite2D\")
 
 func _ready():
 	anim.play(\"idle\")
@@ -95,10 +95,6 @@ func jump():
 		is_jumping = true  # Set jumping state
 		anim.play(\"Jump\")  # Play jump animation only once when jumping
 "
-
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_jyrue"]
-radius = 14.37
-height = 34.0
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_yqrxw"]
 atlas = ExtResource("5_a1le6")
@@ -189,6 +185,10 @@ animations = [{
 "name": &"run",
 "speed": 5.0
 }]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_jyrue"]
+radius = 8.0
+height = 26.0
 
 [sub_resource type="Animation" id="Animation_fd88r"]
 length = 0.001
@@ -323,22 +323,21 @@ _data = {
 }
 
 [node name="Player" type="CharacterBody2D"]
-position = Vector2(575, -240)
 platform_floor_layers = 4294967040
 script = SubResource("GDScript_4ro87")
 
-[node name="PlayerCollider" type="CollisionShape2D" parent="."]
-position = Vector2(0, 1)
-shape = SubResource("CapsuleShape2D_jyrue")
-one_way_collision_margin = 86.3
-
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="PlayerCollider"]
-position = Vector2(-20, -28)
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(-20, -27)
 scale = Vector2(0.833333, 0.855556)
 sprite_frames = SubResource("SpriteFrames_602cn")
 animation = &"Jump"
 centered = false
 flip_h = true
+
+[node name="PlayerCollider" type="CollisionShape2D" parent="."]
+position = Vector2(0, -1)
+shape = SubResource("CapsuleShape2D_jyrue")
+one_way_collision_margin = 86.3
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 root_node = NodePath("")
