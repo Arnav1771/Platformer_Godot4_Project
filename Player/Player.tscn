@@ -1,0 +1,327 @@
+[gd_scene load_steps=31 format=3 uid="uid://difxi8vul2kpm"]
+
+[ext_resource type="Texture2D" uid="uid://cj3ri43vkcbne" path="res://Sunny Land Collection Files/Sunny Land Collection Files/Assets/Characters/Players/Fiery Imp/idle/Sprites/idle-1.png" id="1_reij0"]
+[ext_resource type="Texture2D" uid="uid://by4n0p3y55pyk" path="res://Sunny Land Collection Files/Sunny Land Collection Files/Assets/Characters/Players/Fiery Imp/idle/Sprites/idle-2.png" id="2_lqfb1"]
+[ext_resource type="Texture2D" uid="uid://byfu2m8hiouny" path="res://Sunny Land Collection Files/Sunny Land Collection Files/Assets/Characters/Players/Fiery Imp/idle/Sprites/idle-3.png" id="3_gt2lm"]
+[ext_resource type="Texture2D" uid="uid://edqlj8asb0fk" path="res://Sunny Land Collection Files/Sunny Land Collection Files/Assets/Characters/Players/Fiery Imp/idle/Sprites/idle-4.png" id="4_k0qd0"]
+[ext_resource type="Texture2D" uid="uid://c83mmbofytxt3" path="res://Sunny Land Collection Files/Sunny Land Collection Files/Assets/Characters/Players/Fiery Imp/jump/Sprites/jump-1.png" id="5_a1le6"]
+[ext_resource type="Texture2D" uid="uid://dobw7e46t6y1y" path="res://Sunny Land Collection Files/Sunny Land Collection Files/Assets/Characters/Players/Fiery Imp/jump/Sprites/jump-2.png" id="6_2tf8c"]
+[ext_resource type="Texture2D" uid="uid://evddmkc0n6hd" path="res://Sunny Land Collection Files/Sunny Land Collection Files/Assets/Characters/Players/Fiery Imp/jump/Sprites/jump-3.png" id="7_rbg4t"]
+[ext_resource type="Texture2D" uid="uid://duwcm1r5ugbag" path="res://Sunny Land Collection Files/Sunny Land Collection Files/Assets/Characters/Players/Fiery Imp/jump/Sprites/jump-4.png" id="8_hy4ol"]
+[ext_resource type="Texture2D" uid="uid://eys4bawunals" path="res://Sunny Land Collection Files/Sunny Land Collection Files/Assets/Characters/Players/Fiery Imp/jump/Sprites/jump-5.png" id="9_25bjj"]
+[ext_resource type="Texture2D" uid="uid://ewjrvnfkauti" path="res://Sunny Land Collection Files/Sunny Land Collection Files/Assets/Characters/Players/Fiery Imp/run/Sprites/run-1.png" id="11_yu7dj"]
+[ext_resource type="Texture2D" uid="uid://cdg6snautgvor" path="res://Sunny Land Collection Files/Sunny Land Collection Files/Assets/Characters/Players/Fiery Imp/run/Sprites/run-2.png" id="12_rlilv"]
+[ext_resource type="Texture2D" uid="uid://b7ycbgmcki5ce" path="res://Sunny Land Collection Files/Sunny Land Collection Files/Assets/Characters/Players/Fiery Imp/run/Sprites/run-3.png" id="13_hwj1g"]
+[ext_resource type="Texture2D" uid="uid://l8s5ax65txvq" path="res://Sunny Land Collection Files/Sunny Land Collection Files/Assets/Characters/Players/Fiery Imp/run/Sprites/run-4.png" id="14_72xha"]
+[ext_resource type="Texture2D" uid="uid://culyn24sx5brc" path="res://Sunny Land Collection Files/Sunny Land Collection Files/Assets/Characters/Players/Fiery Imp/run/Sprites/run-5.png" id="15_yt0bh"]
+[ext_resource type="Texture2D" uid="uid://dsowouxnxkpxi" path="res://Sunny Land Collection Files/Sunny Land Collection Files/Assets/Characters/Players/Fiery Imp/run/Sprites/run-6.png" id="16_kfvcc"]
+[ext_resource type="Texture2D" uid="uid://dev5rh3m58npl" path="res://Sunny Land Collection Files/Sunny Land Collection Files/Assets/Characters/Players/Fiery Imp/run/Sprites/run-7.png" id="17_bogd0"]
+[ext_resource type="Texture2D" uid="uid://djnglxo3n31ky" path="res://Sunny Land Collection Files/Sunny Land Collection Files/Assets/Characters/Players/Fiery Imp/run/Sprites/run-8.png" id="18_2p7fx"]
+
+[sub_resource type="GDScript" id="GDScript_4ro87"]
+script/source = "extends CharacterBody2D
+
+const SPEED = 300.0
+const JUMP_VELOCITY = -400.0  # Adjusted jump velocity for a smoother jump
+
+var gravity = ProjectSettings.get_setting(\"physics/2d/default_gravity\")
+var is_jumping = false  # Track if the character is in the air
+
+@onready var anim = get_node(\"PlayerCollider/AnimatedSprite2D\")
+
+func _ready():
+	anim.play(\"idle\")
+
+func _physics_process(delta):
+	# Apply gravity if not on the floor
+	if not is_on_floor():
+		velocity.y += gravity * delta
+	else:
+		# Reset vertical velocity on the floor and update jump status
+		if is_jumping:
+			is_jumping = false
+			if abs(velocity.x) > 0:
+				anim.play(\"run\")
+			else:
+				anim.play(\"idle\")
+		velocity.y = 0
+	
+	# Handling jump
+	if Input.is_action_just_pressed(\"ui_accept\") and is_on_floor():
+		velocity.y = JUMP_VELOCITY
+		is_jumping = true  # Set jumping state
+		anim.play(\"Jump\")  # Play jump animation only once when jumping
+		
+	# Horizontal movement
+	var direction = Input.get_axis(\"ui_left\", \"ui_right\")
+	if direction != 0:
+		velocity.x = direction * SPEED
+		if not is_jumping:  # Play run animation only if not jumping
+			anim.play(\"run\")
+		# Flip sprite based on direction
+		anim.flip_h = direction < 0
+	else:
+		velocity.x = move_toward(velocity.x, 0, SPEED * delta)  # Smooth stop
+		if not is_jumping and anim.animation != \"idle\":
+			anim.play(\"idle\")
+	
+	# Move the character with calculated velocity
+	move_and_slide()
+"
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_jyrue"]
+radius = 14.37
+height = 34.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yqrxw"]
+atlas = ExtResource("5_a1le6")
+region = Rect2(0, 0, 51, 45)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5y4uh"]
+atlas = ExtResource("6_2tf8c")
+region = Rect2(0, 0, 51, 45)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_k8qy2"]
+atlas = ExtResource("7_rbg4t")
+region = Rect2(0, 0, 51, 45)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_d4nla"]
+atlas = ExtResource("8_hy4ol")
+region = Rect2(0, 0, 51, 45)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kdvbd"]
+atlas = ExtResource("9_25bjj")
+region = Rect2(0, 0, 51, 45)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_602cn"]
+resource_local_to_scene = true
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yqrxw")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5y4uh")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_k8qy2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_d4nla")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kdvbd")
+}],
+"loop": true,
+"name": &"Jump",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_reij0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_lqfb1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_gt2lm")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_k0qd0")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 6.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("11_yu7dj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_rlilv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_hwj1g")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14_72xha")
+}, {
+"duration": 1.0,
+"texture": ExtResource("15_yt0bh")
+}, {
+"duration": 1.0,
+"texture": ExtResource("16_kfvcc")
+}, {
+"duration": 1.0,
+"texture": ExtResource("17_bogd0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("18_2p7fx")
+}],
+"loop": true,
+"name": &"run",
+"speed": 5.0
+}]
+
+[sub_resource type="Animation" id="Animation_fd88r"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../PlayerCollider/AnimatedSprite2D:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"idle"]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("../PlayerCollider/AnimatedSprite2D:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("../PlayerCollider/AnimatedSprite2D:speed_scale")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [1.0]
+}
+
+[sub_resource type="Animation" id="Animation_7udgr"]
+resource_name = "idle"
+length = 0.5385
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../PlayerCollider/AnimatedSprite2D:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"idle"]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("../PlayerCollider/AnimatedSprite2D:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.2, 0.366667),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [0, 2, 0]
+}
+
+[sub_resource type="Animation" id="Animation_bgvkb"]
+resource_name = "jump"
+length = 0.667
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../PlayerCollider/AnimatedSprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.266667, 0.6),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [0, 0, 0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("../PlayerCollider/AnimatedSprite2D:speed_scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.3, 0.633333),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [1.0, 1.0, 1.0]
+}
+
+[sub_resource type="Animation" id="Animation_jpqkn"]
+resource_name = "run"
+length = 0.626
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../PlayerCollider/AnimatedSprite2D:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.166667, 0.333333),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [&"Jump", &"Jump", &"Jump"]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("../PlayerCollider/AnimatedSprite2D:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.233333, 0.433333),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [0, 1, 2]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_ft67p"]
+_data = {
+"RESET": SubResource("Animation_fd88r"),
+"idle": SubResource("Animation_7udgr"),
+"jump": SubResource("Animation_bgvkb"),
+"run": SubResource("Animation_jpqkn")
+}
+
+[node name="Player" type="CharacterBody2D"]
+position = Vector2(575, -240)
+platform_floor_layers = 4294967040
+script = SubResource("GDScript_4ro87")
+
+[node name="PlayerCollider" type="CollisionShape2D" parent="."]
+position = Vector2(0, 1)
+shape = SubResource("CapsuleShape2D_jyrue")
+one_way_collision_margin = 86.3
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="PlayerCollider"]
+position = Vector2(-20, -28)
+scale = Vector2(0.833333, 0.855556)
+sprite_frames = SubResource("SpriteFrames_602cn")
+animation = &"run"
+frame_progress = 0.129648
+centered = false
+flip_h = true
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+root_node = NodePath("")
+libraries = {
+"": SubResource("AnimationLibrary_ft67p")
+}
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(-1103, 476)
+ignore_rotation = false
+enabled = false
+zoom = Vector2(-0.621, 1.24)

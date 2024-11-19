@@ -1,0 +1,40 @@
+[gd_scene load_steps=3 format=3 uid="uid://vievecrvyar1"]
+
+[ext_resource type="PackedScene" uid="uid://duubpmroekk3o" path="res://BG.tscn" id="1_dv6ah"]
+
+[sub_resource type="GDScript" id="GDScript_1l10n"]
+script/source = "extends Node2D
+
+
+func _on_quit_button_pressed() -> void:
+	get_tree().quit()
+
+
+
+func _on_play_button_button_down() -> void:
+	get_tree().change_scene_to_file(\"res://World.tscn\")
+"
+
+[node name="Main" type="Node2D"]
+script = SubResource("GDScript_1l10n")
+
+[node name="Play Button" type="Button" parent="."]
+offset_left = 224.0
+offset_top = 130.0
+offset_right = 367.0
+offset_bottom = 214.0
+text = "Play"
+
+[node name="Quit Button" type="Button" parent="."]
+offset_left = 223.0
+offset_top = 313.0
+offset_right = 375.0
+offset_bottom = 404.0
+tooltip_text = "THIS IS FOR BYE BYE"
+text = "BYE BYE"
+
+[node name="BG" parent="." instance=ExtResource("1_dv6ah")]
+
+[connection signal="button_down" from="Play Button" to="." method="_on_play_button_button_down"]
+[connection signal="pressed" from="Play Button" to="." method="_on_play_button_button_down"]
+[connection signal="pressed" from="Quit Button" to="." method="_on_quit_button_pressed"]
