@@ -10,6 +10,7 @@ var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 
 func _ready():
 	anim.play("Jump")
+	add_to_group('player')
 
 
 func _physics_process(delta):
