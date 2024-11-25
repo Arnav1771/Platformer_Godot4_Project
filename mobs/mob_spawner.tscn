@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3 uid="uid://dj5d2n384qs30"]
+
+[ext_resource type="Script" path="res://mobs/mob_spawner.gd" id="1_saxk1"]
+[ext_resource type="PackedScene" uid="uid://ckhkm5tbavvbm" path="res://frog.tscn" id="2_mqw61"]
+
+[node name="Mobs" type="Node2D"]
+position = Vector2(323, -436)
+script = ExtResource("1_saxk1")
+mob_entities = Array[PackedScene]([ExtResource("2_mqw61")])
