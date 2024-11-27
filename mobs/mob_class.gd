@@ -21,16 +21,18 @@ var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 
 @export var killed_by_stomps : bool = true
 
+signal internal_tick
+
 func _ready():
-	if call_deferred('establish_connections'):
+	if call_deferred('establish_external_connections'):
 		print('identified player')
 	else: print('failed to identify player')
-	call_deferred('start')
+	call_deferred('_start')
 
-func start():
+func _start():
 	pass
 
-func establish_connections():
+func establish_external_connections():
 	var players = get_tree().get_nodes_in_group('player')
 	if not players:
 		return false
@@ -39,17 +41,22 @@ func establish_connections():
 	
 	# a good safety measure for it if doesn't work the first time
 	# but it can get stuck in a loop if no player is present
-	# a way to avoid a loop is to have func establish_connections(index = 3): 
+	# a way to avoid a loop is to have func establish_external_connections(index = 3): 
 	# if index <= 0: push_error('unable to load player')
-	# and later call deferred('establish_connections', index -1)
+	# and later call deferred('establish_external_connections', index -1)
 	return true
+
+func establish_internal_connections():
+	internal_tick.connect(_react)
+	internal_tick.connect(reset_reaction_countdown_timer)
+	
 
 func _physics_process(delta: float) -> void:
 	reaction_time_countdown(delta)
-	act(delta)
+	_act(delta)
 
 
-func act(delta):
+func _act(delta):
 	pass
 
 
@@ -57,16 +64,15 @@ var current_reaction_countdown = 4.0
 
 func reaction_time_countdown(delta):
 	current_reaction_countdown -= delta
-	if current_reaction_countdown <= 0:
-		react()
-		current_reaction_countdown = new_countdown_time()
-		print(current_reaction_countdown)
+
+func reset_reaction_countdown_timer():
+	current_reaction_countdown = 0
 
 func new_countdown_time() -> float:
 	return randf() * reaction_time + (reaction_time / 2)
 	
 
-func react():
+func _react():
 	if is_player_within_vicinity():
 		state = STATE.FOLLOWING
 	else:
@@ -75,7 +81,7 @@ func react():
 
 func is_player_within_vicinity():
 	if not player:
-		if not establish_connections():
+		if not establish_external_connections():
 			print('can not identify player')
 		return false
 	return abs(player.position.x - position.x) < player_vicinity_distance
@@ -90,6 +96,6 @@ func body_entered_killzone(incoming_body):
 		player_entered_killzone()
 	
 func player_entered_killzone():
-	print('killed')
 	if killed_by_stomps and player.velocity.y > 0:
+		print('killed')
 		die()

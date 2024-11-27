@@ -1,12 +1,20 @@
 extends CharacterBody2D
 
-var momentum = 0.0
+enum CONDITION { GROUNDED, AIRBORN_ASCENT, AIRBORN_DESCENT }
+var condition = CONDITION.GROUNDED
 
+enum STATE { IDLE, RUN, JUMP, FALL, FLOAT, CROUCH}
+var state = STATE.IDLE
+
+var momentum = 0.0
 
 @export var acceleration = 0.09
 @export var max_speed = 300.0
 @export var friction = 0.9
 @export var jump_strength = 400.0
+@export var jump_duration = 1.0
+@export var jump_strength_curve : Curve
+
 @export var tilt_range : float = 90.0
 
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
@@ -14,34 +22,43 @@ var is_jumping = false
 
 @onready var anim = get_node("AnimatedSprite2D")
 
-func _ready():
-	anim.play("idle")
+func _input(event: InputEvent) -> void:
+	if event.is_action_pressed("jump"):
+		jump()
+	
+	elif event.is_action("ui_down"):
+		if event.is_pressed():
+			crouch()
+		elif event.is_released():
+			stand()
+
 
 func _physics_process(delta):
 	apply_gravity(delta)
 	move()
-	jump()
 	move_and_slide()
 	tilt()
+	match_animation_to_state()
 
 
 func apply_gravity(delta):
 	if not is_on_floor():
 		fall(delta)
 	else:
-		if is_jumping:
+		if state == STATE.JUMP or state == STATE.FALL:
 			land()
 		velocity.y = 0
 
 func fall(delta):
 	velocity.y += gravity * delta
+	if velocity.y > 0.0:
+		state = STATE.JUMP
+	else:
+		state = STATE.FALL
 
 func land():
 	is_jumping = false
-	if abs(velocity.x) > 0:
-		anim.play("run")
-	else:
-		anim.play("idle")
+
 
 func move():
 	if direction() != 0: 
@@ -56,7 +73,6 @@ func direction():
 
 func apply_friction():
 	velocity.x *= friction
-	# Move the character with calculated velocity
 
 func accelerate(direction):
 	momentum = lerp(momentum, max_speed * direction, acceleration)
@@ -65,10 +81,25 @@ func accelerate(direction):
 func deaccelerate():
 	momentum = lerp(momentum, 0.0, acceleration)
 	velocity.x += momentum
+
+
+func calculate_state() -> STATE:
+	if is_crouching:
+		return STATE.CROUCH
+	
+	
+	
+	return STATE.IDLE
+	
+	
+
+func match_animation_to_state(incoming_state = state):
+	if abs(velocity.x) > 0:
+		anim.play("run")
+	else:
+		anim.play("idle")
 	if not is_jumping and anim.animation != "idle":
 		anim.play("idle")
-
-	
 	if not is_jumping:  # Play run animation only if not jumping
 		anim.play("run")
 
@@ -85,11 +116,12 @@ func collide():
 			collision.get_collider().on_death()
 
 func jump():
-	if Input.is_action_pressed('jump') and is_on_floor():
-		velocity.y -= jump_strength
-		is_jumping = true  # Set jumping state
-		anim.play("Jump")  # Play jump animation only once when jumping
+	if is_on_floor():
+		print('jumped')
+		state = STATE.JUMP  # Set jumping state
 
+func jumping():
+	pass
 
 var desired_tilt_angle : float
 var actual_tilt_angle : float
@@ -110,4 +142,20 @@ func tilt():
 	var actual_tilt_speed_change = tilt_change_speed + (tilt_change_speed * int(is_on_floor() == false))
 	actual_tilt_angle = lerp(actual_tilt_angle, desired_tilt_angle, actual_tilt_speed_change)
 	anim.rotation_degrees = actual_tilt_angle
-	
+
+var is_crouching = false
+
+var crouch_timer = 0.0
+@export var crouch_to_super_jump_duration = 0.2
+
+func crouch():
+	is_crouching = true
+
+func stand():
+	is_crouching = false
+
+func crouch_while_running():
+	pass
+
+func crouch_while_falling():
+	pass

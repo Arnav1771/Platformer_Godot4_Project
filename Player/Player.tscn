@@ -1,4 +1,4 @@
-[gd_scene load_steps=32 format=3 uid="uid://difxi8vul2kpm"]
+[gd_scene load_steps=36 format=3 uid="uid://difxi8vul2kpm"]
 
 [ext_resource type="Texture2D" uid="uid://cj3ri43vkcbne" path="res://Sunny Land Collection Files/Sunny Land Collection Files/Assets/Characters/Players/Fiery Imp/idle/Sprites/idle-1.png" id="1_reij0"]
 [ext_resource type="Script" path="res://Player/Player_a.gd" id="1_vh0y1"]
@@ -7,9 +7,12 @@
 [ext_resource type="Texture2D" uid="uid://edqlj8asb0fk" path="res://Sunny Land Collection Files/Sunny Land Collection Files/Assets/Characters/Players/Fiery Imp/idle/Sprites/idle-4.png" id="4_k0qd0"]
 [ext_resource type="Texture2D" uid="uid://c83mmbofytxt3" path="res://Sunny Land Collection Files/Sunny Land Collection Files/Assets/Characters/Players/Fiery Imp/jump/Sprites/jump-1.png" id="5_a1le6"]
 [ext_resource type="Texture2D" uid="uid://dobw7e46t6y1y" path="res://Sunny Land Collection Files/Sunny Land Collection Files/Assets/Characters/Players/Fiery Imp/jump/Sprites/jump-2.png" id="6_2tf8c"]
+[ext_resource type="Texture2D" uid="uid://dlil7117p7d42" path="res://Sunny Land Collection Files/Sunny Land Collection Files/Assets/Characters/Players/Fiery Imp/crouch/Sprites/crouch-1.png" id="7_3gxeg"]
 [ext_resource type="Texture2D" uid="uid://evddmkc0n6hd" path="res://Sunny Land Collection Files/Sunny Land Collection Files/Assets/Characters/Players/Fiery Imp/jump/Sprites/jump-3.png" id="7_rbg4t"]
 [ext_resource type="Texture2D" uid="uid://duwcm1r5ugbag" path="res://Sunny Land Collection Files/Sunny Land Collection Files/Assets/Characters/Players/Fiery Imp/jump/Sprites/jump-4.png" id="8_hy4ol"]
+[ext_resource type="Texture2D" uid="uid://dre3og4v3ynej" path="res://Sunny Land Collection Files/Sunny Land Collection Files/Assets/Characters/Players/Fiery Imp/crouch/Sprites/crouch-2.png" id="8_isnkm"]
 [ext_resource type="Texture2D" uid="uid://eys4bawunals" path="res://Sunny Land Collection Files/Sunny Land Collection Files/Assets/Characters/Players/Fiery Imp/jump/Sprites/jump-5.png" id="9_25bjj"]
+[ext_resource type="Texture2D" uid="uid://de2k1f6gp7f8b" path="res://Sunny Land Collection Files/Sunny Land Collection Files/Assets/Characters/Players/Fiery Imp/crouch/Sprites/crouch-3.png" id="9_48jyk"]
 [ext_resource type="Texture2D" uid="uid://ewjrvnfkauti" path="res://Sunny Land Collection Files/Sunny Land Collection Files/Assets/Characters/Players/Fiery Imp/run/Sprites/run-1.png" id="11_yu7dj"]
 [ext_resource type="Texture2D" uid="uid://cdg6snautgvor" path="res://Sunny Land Collection Files/Sunny Land Collection Files/Assets/Characters/Players/Fiery Imp/run/Sprites/run-2.png" id="12_rlilv"]
 [ext_resource type="Texture2D" uid="uid://b7ycbgmcki5ce" path="res://Sunny Land Collection Files/Sunny Land Collection Files/Assets/Characters/Players/Fiery Imp/run/Sprites/run-3.png" id="13_hwj1g"]
@@ -18,6 +21,10 @@
 [ext_resource type="Texture2D" uid="uid://dsowouxnxkpxi" path="res://Sunny Land Collection Files/Sunny Land Collection Files/Assets/Characters/Players/Fiery Imp/run/Sprites/run-6.png" id="16_kfvcc"]
 [ext_resource type="Texture2D" uid="uid://dev5rh3m58npl" path="res://Sunny Land Collection Files/Sunny Land Collection Files/Assets/Characters/Players/Fiery Imp/run/Sprites/run-7.png" id="17_bogd0"]
 [ext_resource type="Texture2D" uid="uid://djnglxo3n31ky" path="res://Sunny Land Collection Files/Sunny Land Collection Files/Assets/Characters/Players/Fiery Imp/run/Sprites/run-8.png" id="18_2p7fx"]
+
+[sub_resource type="Curve" id="Curve_chue8"]
+_data = [Vector2(0, 0), 0.0, 2.80857, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
 
 [sub_resource type="Curve" id="Curve_28vw3"]
 
@@ -62,6 +69,20 @@ animations = [{
 }],
 "loop": true,
 "name": &"Jump",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("7_3gxeg")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_isnkm")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_48jyk")
+}],
+"loop": true,
+"name": &"crouch",
 "speed": 5.0
 }, {
 "frames": [{
@@ -253,6 +274,7 @@ platform_floor_layers = 4294967040
 script = ExtResource("1_vh0y1")
 acceleration = 0.06
 max_speed = 80.0
+jump_strength_curve = SubResource("Curve_chue8")
 tilt_range = 60.0
 tilt_curve = SubResource("Curve_28vw3")
 
@@ -260,7 +282,7 @@ tilt_curve = SubResource("Curve_28vw3")
 position = Vector2(3.55271e-15, 4)
 scale = Vector2(0.833333, 0.855556)
 sprite_frames = SubResource("SpriteFrames_602cn")
-animation = &"Jump"
+animation = &"crouch"
 centered = false
 offset = Vector2(-24, -36.2337)
 flip_h = true

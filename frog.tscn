@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://ckhkm5tbavvbm"]
+[gd_scene load_steps=17 format=3 uid="uid://ckhkm5tbavvbm"]
 
 [ext_resource type="Texture2D" uid="uid://d1rkpevrdcjh" path="res://Sunny Land Collection Files/Sunny Land Collection Files/Assets/Characters/Enemies and NPC/frog/Sprites/idle/frog-idle-1.png" id="1_qvac7"]
 [ext_resource type="Script" path="res://frog.gd" id="1_wolxl"]
@@ -10,7 +10,7 @@
 [ext_resource type="Texture2D" uid="uid://cduiqkn4wa0c2" path="res://Sunny Land Collection Files/Sunny Land Collection Files/Assets/Characters/Enemies and NPC/frog/Sprites/jump/frog-jump-2.png" id="6_aexhy"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_cv2x8"]
-size = Vector2(3.7395, 2.68666)
+size = Vector2(5.9832, 5.30777)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_6fahw"]
 atlas = ExtResource("2_b27oo")
@@ -78,6 +78,9 @@ animations = [{
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_p1iyw"]
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_d1i8y"]
+size = Vector2(28, 2)
+
 [node name="Frog" type="CharacterBody2D" groups=["frogs"]]
 script = ExtResource("1_wolxl")
 
@@ -100,5 +103,13 @@ scale = Vector2(0.268441, 1.23319)
 scale = Vector2(25.1942, 5.74234)
 shape = SubResource("CircleShape2D_p1iyw")
 
+[node name="kill_zone" type="Area2D" parent="."]
+position = Vector2(0, -1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="kill_zone"]
+position = Vector2(0, -16)
+shape = SubResource("RectangleShape2D_d1i8y")
+
 [connection signal="body_entered" from="Player Detection" to="." method="_on_player_detection_body_entered"]
 [connection signal="body_exited" from="Player Detection" to="." method="_on_player_detection_body_exited"]
+[connection signal="body_entered" from="kill_zone" to="." method="_on_kill_zone_body_entered"]
